@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { requireNativeComponent, StyleSheet } from 'react-native';
+import { requireNativeComponent, StyleSheet, DeviceEventEmitter } from 'react-native';
 import { StateNavigator, StateContext, State, Crumb } from 'navigation';
 import { NavigationContext, NavigationEvent } from 'navigation-react';
 import BackButton from './BackButton';
@@ -7,15 +7,19 @@ type SceneProps = { crumb: number, sceneKey: string, renderScene: (state: State,
 type SceneState = { navigationEvent: NavigationEvent };
 
 class Scene extends React.Component<SceneProps, SceneState> {
+    private navigationID = getId() 
     constructor(props) {
         super(props);
         this.state = {navigationEvent: null};
         this.handleBack = this.handleBack.bind(this);
         this.onWillAppear = this.onWillAppear.bind(this);
+        this.onDidAppear = this.onDidAppear.bind(this);
+        this.onWillDisappear = this.onWillDisappear.bind(this);
+        this.onDidDisappear = this.onDidDisappear.bind(this);
     }
     static defaultProps = {
         title: (state: State) => state.title,
-        renderScene: (state: State, data: any) => state.renderScene(data)
+        renderScene: (state: State, data: any) => state.renderScene(data),
     }
     static getDerivedStateFromProps(props: SceneProps, {navigationEvent: prevNavigationEvent}: SceneState) {
         var {crumb, navigationEvent} = props;
@@ -64,6 +68,16 @@ class Scene extends React.Component<SceneProps, SceneState> {
             var {oldState, state, data, asyncData} = peekNavigator.stateContext;
             this.setState({navigationEvent: {oldState, state, data, asyncData, stateNavigator: peekNavigator, nextState: undefined, nextData: undefined}});
         }
+        DeviceEventEmitter.emit("componentWillAppear", {navigationID: this.navigationID})
+    }
+    onDidAppear() {
+        DeviceEventEmitter.emit("componentDidAppear", {navigationID: this.navigationID})
+    }
+    onWillDisappear() {
+        DeviceEventEmitter.emit("componentWillDisappear", {navigationID: this.navigationID})
+    }
+    onDidDisappear() {
+        DeviceEventEmitter.emit("componentDidDisappear", {navigationID: this.navigationID})
     }
     static createStateContext(crumbs: Crumb[], nextCrumb: Crumb, crumb: number) {
         var stateContext = new StateContext();
@@ -106,19 +120,29 @@ class Scene extends React.Component<SceneProps, SceneState> {
         var {state, data} = navigationEvent ? navigationEvent.stateNavigator.stateContext : crumbs[crumb];
         return (
             <NVScene
+                navigationID={this.navigationID}
                 sceneKey={sceneKey}
                 {...this.getAnimation()}
                 title={title(state, data)}
                 style={styles.scene}
                 onWillAppear={this.onWillAppear}
+                onDidAppear={this.onDidAppear}
+                onWillDisappear={this.onWillDisappear}
+                onDidDisappear={this.onDidDisappear}
                 onPopped={() => popped(sceneKey)}>
                 <BackButton onPress={this.handleBack} />
                 <NavigationContext.Provider value={navigationEvent}>
-                    {navigationEvent && this.props.renderScene(state, data)}
+                    {navigationEvent && this.props.renderScene(state, {...data, __navigationID__: this.navigationID})}
                 </NavigationContext.Provider>
             </NVScene>
         );
     }
+}
+
+var i = 0
+function getId() {
+    i++
+    return `${i}`
 }
 
 var  NVScene = requireNativeComponent<any>('NVScene', null);

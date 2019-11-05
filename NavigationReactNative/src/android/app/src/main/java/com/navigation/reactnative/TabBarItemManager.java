@@ -26,8 +26,18 @@ public class TabBarItemManager extends ViewGroupManager<TabBarItemView> {
     }
 
     @ReactProp(name = "image")
-    public void setImage(TabBarItemView view, String image) {
+    public void setImage(TabBarItemView view, @Nullable ReadableMap image) {
         view.setImage(image);
+    }
+
+    @ReactProp(name = "badge")
+    public void setBadge(TabBarItemView view, String title) {
+        view.badge = title;
+    }
+
+    @ReactProp(name = "badgeColor", customType = "Color")
+    public void setTitle(TabBarItemView view, Integer color) {
+        view.badgeColor = color;
     }
 
     @Nonnull

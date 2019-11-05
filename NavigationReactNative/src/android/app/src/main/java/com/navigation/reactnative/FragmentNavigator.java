@@ -19,7 +19,7 @@ class FragmentNavigator extends SceneNavigator {
 
     @Override
     void navigateBack(int currentCrumb, int crumb, Activity activity, NavigationStackView stack) {
-        FragmentManager fragmentManager = getFragmentManager(stack, activity);;
+        FragmentManager fragmentManager = getFragmentManager(stack, activity);
         SceneFragment fragment = (SceneFragment) fragmentManager.getFragments().get(fragmentManager.getFragments().size() - 1);
         Pair[] sharedElements = getOldSharedElements(currentCrumb, crumb, fragment, stack);
         SceneFragment prevFragment = (SceneFragment) fragmentManager.findFragmentByTag(stack.keys.getString(crumb));
@@ -82,7 +82,7 @@ class FragmentNavigator extends SceneNavigator {
         fragmentTransaction.commit();
     }
 
-    ;private FragmentManager getFragmentManager(NavigationStackView stack,  Activity activity) {
+    private FragmentManager getFragmentManager(NavigationStackView stack,  Activity activity) {
         ViewParent parent = stack;
         Fragment fragment = null;
         while (parent != null) {

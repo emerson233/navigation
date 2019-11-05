@@ -20,12 +20,24 @@
 
 - (void)setBadge:(NSString *)badge
 {
-    self.tab.badgeValue = badge;
+    BOOL isDot = [badge isEqualToString:@"BADGE_DOT"];
+
+    if (isDot) {
+        self.tab.badgeValue = @"●";
+        self.tab.badgeColor = [UIColor clearColor];
+    } else {
+        self.tab.badgeValue = badge;
+        self.tab.badgeColor = [UIColor redColor];
+    }
 }
 
 - (void)setBadgeColor:(UIColor *)badgeColor
 {
-    self.tab.badgeColor = badgeColor;
+    if ([self.tab.badgeValue isEqualToString:@"●"]) {
+        [self.tab setBadgeTextAttributes:@{NSForegroundColorAttributeName: badgeColor} forState:UIControlStateNormal];
+    } else {
+        self.tab.badgeColor = badgeColor;
+    }
 }
 
 - (void)setImage:(UIImage *)image

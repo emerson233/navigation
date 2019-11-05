@@ -8,26 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.NativeGestureUtil;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.uimanager.events.NativeGestureUtil;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class TabBarView extends ViewPager {
+
     private List<TabBarItemView> tabs = new ArrayList<>();
 
     public TabBarView(Context context) {
@@ -45,28 +44,12 @@ public class TabBarView extends ViewPager {
         }
         requestLayout();
         post(measureAndLayout);
-        if (getTabLayout() != null)
+        if (getTabLayout() != null) {
             getTabLayout().setupWithViewPager(this);
-        populateTabIcons();
-    }
-
-    void populateTabIcons() {
-        TabLayoutView tabLayout = getTabLayout();
-        if (tabLayout != null && getAdapter() != null) {
-            for(int i = 0; i < tabLayout.getTabCount(); i++) {
-                Integer imageReource = getAdapter().tabFragments.get(i).tabBarItem.imageResource;
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null) {
-                    if (imageReource != null && imageReource != 0)
-                        tab.setIcon(imageReource);
-                    else
-                        tab.setIcon(null);
-                }
-            }
         }
     }
 
-    private TabLayoutView getTabLayout() {
+    TabLayoutView getTabLayout() {
         for(int i = 0; getParent() != null && i < ((ViewGroup) getParent()).getChildCount(); i++) {
             View child = ((ViewGroup) getParent()).getChildAt(i);
             if (child instanceof TabLayoutView)
@@ -144,8 +127,8 @@ public class TabBarView extends ViewPager {
         return false;
     }
 
-    private class Adapter extends FragmentPagerAdapter {
-        private List<TabFragment> tabFragments = new ArrayList<>();
+    class Adapter extends FragmentPagerAdapter {
+        List<TabFragment> tabFragments = new ArrayList<>();
         FragmentManager fragmentManager;
 
         Adapter(FragmentManager fragmentManager) {
@@ -154,17 +137,22 @@ public class TabBarView extends ViewPager {
         }
 
         void addTab(TabBarItemView tab, int index) {
+            for (TabFragment fragment: tabFragments)  {
+                if (fragment.tabBarItem == tab) {
+                    return;
+                }
+            }
             tabFragments.add(index, new TabFragment(tab));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 tab.setElevation(-1 * index);
             notifyDataSetChanged();
-            setOffscreenPageLimit(tabFragments.size() + 1);
+//            setOffscreenPageLimit(tabFragments.size() + 1);
         }
 
         void removeTab(int index) {
             tabFragments.remove(index);
             notifyDataSetChanged();
-            setOffscreenPageLimit(tabFragments.size() + 1);
+//            setOffscreenPageLimit(tabFragments.size() + 1);
         }
 
         @Override
@@ -198,15 +186,6 @@ public class TabBarView extends ViewPager {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             post(measureAndLayout);
             return super.instantiateItem(container, position);
-        }
-
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            if ((object instanceof TabFragment) && !tabFragments.contains(object)) {
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.remove((Fragment) object);
-                transaction.commitAllowingStateLoss();
-            }
         }
     }
 

@@ -61,6 +61,20 @@
     
     NVNavigationBarView *navigationBar = (NVNavigationBarView *) [self.view viewWithTag:NAVIGATION_BAR];
     [navigationBar updateColors];
+    
+    [_view didAppear];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [_view willDisappear];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [_view didDisappear];
 }
 
 - (void)viewDidLayoutSubviews

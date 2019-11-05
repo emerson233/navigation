@@ -37,6 +37,10 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
     public void setImages(TabBarView view, ReadableArray images) {
     }
 
+    @ReactProp(name = "badges")
+    public void setBadges(TabBarView view, ReadableArray badges) {
+    }
+
     @Override
     public int getChildCount(TabBarView parent) {
         return parent.getTabsCount();
@@ -67,7 +71,9 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
     @Override
     protected void onAfterUpdateTransaction(@Nonnull TabBarView view) {
         super.onAfterUpdateTransaction(view);
-        view.populateTabIcons();
+        if (view.getTabLayout() != null) {
+            view.getTabLayout().populateTabIcons();
+        }
 
     }
 }
