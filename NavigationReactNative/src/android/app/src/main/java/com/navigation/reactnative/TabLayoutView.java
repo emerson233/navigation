@@ -64,6 +64,29 @@ public class TabLayoutView extends TabLayout {
             selectedTintColor = unselectedTintColor = defaultTextColor = getTabTextColors().getDefaultColor();
         setSelectedTabIndicatorColor(defaultTextColor);
         iconResolver = new IconResolver(context);
+
+        addOnTabSelectedListener(new BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(Tab tab) {
+                if (tab.getCustomView() != null) {
+                    ImageView iconView = tab.getCustomView().findViewById(R.id.icon);
+                    iconView.setColorFilter(selectedTintColor, PorterDuff.Mode.SRC_IN);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(Tab tab) {
+                if (tab.getCustomView() != null) {
+                    ImageView iconView = tab.getCustomView().findViewById(R.id.icon);
+                    iconView.setColorFilter(unselectedTintColor, PorterDuff.Mode.SRC_IN);
+                }
+            }
+
+            @Override
+            public void onTabReselected(Tab tab) {
+
+            }
+        });
     }
 
     @Override
@@ -122,15 +145,14 @@ public class TabLayoutView extends TabLayout {
                         unselectedTintColor
                 };
                 ColorStateList tintColor = new ColorStateList(states, colors);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ImageViewCompat.setImageTintList(iconView, tintColor);
-                }
+                textView.setTextColor(tintColor);
+
                 if (tab.isSelected()) {
                     iconView.setColorFilter(selectedTintColor, PorterDuff.Mode.SRC_IN);
                 } else {
                     iconView.setColorFilter(unselectedTintColor, PorterDuff.Mode.SRC_IN);
                 }
-                textView.setTextColor(tintColor);
+
                 tab.setCustomView(view);
                 TabBarItemView itemView = tabBar.getAdapter().tabFragments.get(i).tabBarItem;
                 ReadableMap iconSource = itemView.imageResource;

@@ -146,13 +146,13 @@ public class TabBarView extends ViewPager {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 tab.setElevation(-1 * index);
             notifyDataSetChanged();
-//            setOffscreenPageLimit(tabFragments.size() + 1);
+            setOffscreenPageLimit(tabFragments.size() + 1);
         }
 
         void removeTab(int index) {
             tabFragments.remove(index);
             notifyDataSetChanged();
-//            setOffscreenPageLimit(tabFragments.size() + 1);
+            setOffscreenPageLimit(tabFragments.size() + 1);
         }
 
         @Override
@@ -203,7 +203,7 @@ public class TabBarView extends ViewPager {
             reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onTabSelected", event);
             getAdapter().tabFragments.get(position).tabBarItem.pressed();
         }
-
+        
         @Override
         public void onPageScrollStateChanged(int state) {
         }
