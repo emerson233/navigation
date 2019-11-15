@@ -24,6 +24,9 @@
 
     if (isDot) {
         self.tab.badgeValue = @"●";
+        if (self.tab.badgeColor) {
+            [self.tab setBadgeTextAttributes:@{NSForegroundColorAttributeName: self.tab.badgeColor} forState:UIControlStateNormal];
+        }
         self.tab.badgeColor = [UIColor clearColor];
     } else {
         self.tab.badgeValue = badge;
@@ -33,7 +36,7 @@
 
 - (void)setBadgeColor:(UIColor *)badgeColor
 {
-    if ([self.tab.badgeValue isEqualToString:@"●"]) {
+    if (badgeColor && [self.tab.badgeValue isEqualToString:@"●"]) {
         [self.tab setBadgeTextAttributes:@{NSForegroundColorAttributeName: badgeColor} forState:UIControlStateNormal];
     } else {
         self.tab.badgeColor = badgeColor;

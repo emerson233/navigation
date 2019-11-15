@@ -19,12 +19,20 @@ class FragmentNavigator extends SceneNavigator {
 
     @Override
     void navigateBack(int currentCrumb, int crumb, Activity activity, NavigationStackView stack) {
-        FragmentManager fragmentManager = getFragmentManager(stack, activity);
+        final FragmentManager fragmentManager = getFragmentManager(stack, activity);
         SceneFragment fragment = (SceneFragment) fragmentManager.getFragments().get(fragmentManager.getFragments().size() - 1);
         Pair[] sharedElements = getOldSharedElements(currentCrumb, crumb, fragment, stack);
         SceneFragment prevFragment = (SceneFragment) fragmentManager.findFragmentByTag(stack.keys.getString(crumb));
         if (sharedElements != null && prevFragment != null && prevFragment.getScene() != null)
             prevFragment.getScene().transitioner = new SharedElementTransitioner(prevFragment, getSharedElementSet(stack.oldSharedElementNames));
+        for (int i = currentCrumb; i > crumb + 1; i--) {
+            SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
+            currentFragment.animationDisabled = true; // disable all intermediate animations
+        }
+        for (int i = currentCrumb; i > crumb; i--) {
+            SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
+            currentFragment.getScene().disappeared();
+        }
         fragmentManager.popBackStack(String.valueOf(crumb), 0);
     }
 
@@ -59,9 +67,10 @@ class FragmentNavigator extends SceneNavigator {
                 fragmentTransaction.setCustomAnimations(oldCrumb != -1 ? enter : 0, exit, popEnter, popExit);
             }
             SceneFragment fragment = new SceneFragment(scene, getSharedElementSet(stack.sharedElementNames));
-            fragmentTransaction.replace(stack.getChildAt(0).getId(), fragment, key);
+            fragmentTransaction.add(stack.getChildAt(0).getId(), fragment, key);
             fragmentTransaction.addToBackStack(String.valueOf(nextCrumb));
             fragmentTransaction.commit();
+            scene.appeared();
         }
     }
 
@@ -73,7 +82,7 @@ class FragmentNavigator extends SceneNavigator {
         SceneView scene = stack.scenes.get(key);
         int popEnter = getAnimationResourceId(activity, scene.enterAnim, android.R.attr.activityCloseEnterAnimation);
         int popExit = getAnimationResourceId(activity, scene.exitAnim, android.R.attr.activityCloseExitAnimation);
-        FragmentManager fragmentManager = getFragmentManager(stack, activity);;
+        FragmentManager fragmentManager = getFragmentManager(stack, activity);
         fragmentManager.popBackStack();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);

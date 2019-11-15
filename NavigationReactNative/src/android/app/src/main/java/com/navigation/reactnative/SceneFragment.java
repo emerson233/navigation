@@ -5,15 +5,17 @@ import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+
+import java.util.HashSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 
-import java.util.HashSet;
-
 public class SceneFragment extends Fragment implements SharedElementContainer {
+    public boolean animationDisabled;
     private SceneView scene;
     private HashSet<String> sharedElementNames;
 
@@ -64,5 +66,15 @@ public class SceneFragment extends Fragment implements SharedElementContainer {
     @Override
     public void setEnterCallback(SharedElementCallback sharedElementCallback) {
         setEnterSharedElementCallback(sharedElementCallback);
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (animationDisabled) {
+            Animation a = new Animation() {};
+            a.setDuration(0);
+            return a;
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim);
     }
 }

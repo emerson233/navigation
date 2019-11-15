@@ -7,7 +7,6 @@ type SceneProps = { crumb: number, sceneKey: string, renderScene: (state: State,
 type SceneState = { navigationEvent: NavigationEvent };
 
 class Scene extends React.Component<SceneProps, SceneState> {
-    private navigationID = getId() 
     constructor(props) {
         super(props);
         this.state = {navigationEvent: null};
@@ -68,17 +67,25 @@ class Scene extends React.Component<SceneProps, SceneState> {
             var {oldState, state, data, asyncData} = peekNavigator.stateContext;
             this.setState({navigationEvent: {oldState, state, data, asyncData, stateNavigator: peekNavigator, nextState: undefined, nextData: undefined}});
         }
-        DeviceEventEmitter.emit("componentWillAppear", {navigationID: this.navigationID})
+        this.emitEvent("willAppear")
     }
     onDidAppear() {
-        DeviceEventEmitter.emit("componentDidAppear", {navigationID: this.navigationID})
+        this.emitEvent("didAppear")
     }
     onWillDisappear() {
-        DeviceEventEmitter.emit("componentWillDisappear", {navigationID: this.navigationID})
+        this.emitEvent("willDisappear")
     }
     onDidDisappear() {
-        DeviceEventEmitter.emit("componentDidDisappear", {navigationID: this.navigationID})
+        this.emitEvent("didDisappear")
     }
+    emitEvent(name: string) {
+        var {navigationEvent} = this.state;
+        var {crumb, navigationEvent: {stateNavigator}} = this.props;
+        var {crumbs} = stateNavigator.stateContext;
+        var {data} = navigationEvent ? navigationEvent.stateNavigator.stateContext : crumbs[crumb];
+        DeviceEventEmitter.emit(name, { navigationId: data && data.navigationId })
+    }
+
     static createStateContext(crumbs: Crumb[], nextCrumb: Crumb, crumb: number) {
         var stateContext = new StateContext();
         var {state, data, url, title} = crumbs[crumb];
@@ -120,7 +127,6 @@ class Scene extends React.Component<SceneProps, SceneState> {
         var {state, data} = navigationEvent ? navigationEvent.stateNavigator.stateContext : crumbs[crumb];
         return (
             <NVScene
-                navigationID={this.navigationID}
                 sceneKey={sceneKey}
                 {...this.getAnimation()}
                 title={title(state, data)}
@@ -132,24 +138,17 @@ class Scene extends React.Component<SceneProps, SceneState> {
                 onPopped={() => popped(sceneKey)}>
                 <BackButton onPress={this.handleBack} />
                 <NavigationContext.Provider value={navigationEvent}>
-                    {navigationEvent && this.props.renderScene(state, {...data, __navigationID__: this.navigationID})}
+                    {navigationEvent && this.props.renderScene(state, data)}
                 </NavigationContext.Provider>
             </NVScene>
         );
     }
 }
 
-var i = 0
-function getId() {
-    i++
-    return `${i}`
-}
-
 var  NVScene = requireNativeComponent<any>('NVScene', null);
 
 const styles = StyleSheet.create({
     scene: {
-        backgroundColor: '#fff',
         position: 'absolute',
         top: 0, right: 0,
         bottom: 0, left: 0,

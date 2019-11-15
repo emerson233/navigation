@@ -75,6 +75,18 @@ public class SceneView extends ViewGroup implements NavigationBoundary {
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onPopped", null);
     }
 
+    protected void appeared() {
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onWillAppear", null);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onDidAppear", null);
+    }
+
+    protected void disappeared() {
+        ReactContext reactContext = (ReactContext) getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onWillDisappear", null);
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onDidDisappear", null);
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
     }

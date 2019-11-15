@@ -87,7 +87,7 @@ class NavigationStack extends React.Component<NavigationStackProps, NavigationSt
                 primary={primary}
                 finish={finish}
                 fragmentMode={fragmentMode}
-                style={[styles.stack, fragmentMode ? {backgroundColor: '#000'} : null]}
+                style={styles.stack}
                 {...this.getAnimation()}
                 onDidNavigateBack={this.onDidNavigateBack}>
                 <BackButton onPress={this.handleBack} />

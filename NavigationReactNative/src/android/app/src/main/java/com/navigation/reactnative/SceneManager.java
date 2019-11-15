@@ -42,6 +42,10 @@ public class SceneManager extends ViewGroupManager<SceneView> {
     public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
         return MapBuilder.<String, Object>builder()
             .put("onPopped", MapBuilder.of("registrationName", "onPopped"))
+            .put("onWillAppear", MapBuilder.of("registrationName", "onWillAppear"))
+            .put("onDidAppear", MapBuilder.of("registrationName", "onDidAppear"))
+            .put("onWillDisappear", MapBuilder.of("registrationName", "onWillDisappear"))
+            .put("onDidDisappear", MapBuilder.of("registrationName", "onDidDisappear"))
             .build();
     }
 }
