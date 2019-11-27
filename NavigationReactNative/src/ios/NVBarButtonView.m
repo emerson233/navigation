@@ -16,6 +16,18 @@
     return self;
 }
 
+- (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)atIndex
+{
+    [super insertReactSubview:subview atIndex:atIndex];
+    self.button.customView = subview;
+}
+
+- (void)removeReactSubview:(UIView *)subview
+{
+    [super removeReactSubview:subview];
+    self.button.customView = nil;
+}
+
 - (void)setTitle:(NSString *)title
 {
     self.button.title = title;
