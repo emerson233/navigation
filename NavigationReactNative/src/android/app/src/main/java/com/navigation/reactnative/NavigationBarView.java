@@ -175,6 +175,8 @@ public class NavigationBarView extends AppBarLayout {
     private static final String PROP_ACTION_ICON = "image";
     private static final String PROP_ACTION_SHOW = "show";
     private static final String PROP_ACTION_TITLE = "title";
+    private static final String PROP_ACTION_TINTCOLOR = "tintColor";
+    private static final String PROP_ACTION_ENABLED = "enabled";
 
     void setMenuItems(@Nullable ReadableArray menuItems) {
         toolbar.getMenu().clear();
@@ -190,6 +192,9 @@ public class NavigationBarView extends AppBarLayout {
                         : "";
                 ReadableMap iconSource = menuItemProps.getMap(PROP_ACTION_ICON);
                 MenuItem menuItem = toolbar.getMenu().add(Menu.NONE, Menu.NONE, i, title);
+                if (menuItemProps.hasKey(PROP_ACTION_ENABLED)) {
+                    menuItem.setEnabled(menuItemProps.getBoolean(PROP_ACTION_ENABLED));
+                }
                 if (iconSource != null) {
                     setMenuItemIcon(menuItem, iconSource);
                 }

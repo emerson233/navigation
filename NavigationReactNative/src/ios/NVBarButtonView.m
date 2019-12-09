@@ -38,6 +38,16 @@
     self.button.image = image;
 }
 
+- (void)setTintColor:(UIColor *)tintColor
+{
+    self.button.tintColor = tintColor;
+}
+
+- (void)setEnabled:(BOOL)enabled
+{
+    self.button.enabled = enabled;
+}
+
 - (void)setSystemItem:(UIBarButtonSystemItem)systemItem
 {
     self.button = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:systemItem target:self action:@selector(buttonPressed)];
