@@ -39,8 +39,10 @@ public class SceneFragment extends Fragment implements SharedElementContainer {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (scene != null)
+        if (scene != null) {
+            scene.disappeared();
             scene.popped();
+        }
     }
 
     @Override

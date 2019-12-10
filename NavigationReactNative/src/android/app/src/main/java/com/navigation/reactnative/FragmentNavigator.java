@@ -1,9 +1,12 @@
 package com.navigation.reactnative;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
@@ -29,10 +32,7 @@ class FragmentNavigator extends SceneNavigator {
             SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
             currentFragment.animationDisabled = true; // disable all intermediate animations
         }
-        for (int i = currentCrumb; i > crumb; i--) {
-            SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
-            currentFragment.getScene().disappeared();
-        }
+        prevFragment.getScene().appeared();
         fragmentManager.popBackStack(String.valueOf(crumb), 0);
     }
 
@@ -46,7 +46,7 @@ class FragmentNavigator extends SceneNavigator {
         for(int i = 0; i < crumb - currentCrumb; i++) {
             int nextCrumb = currentCrumb + i + 1;
             String key = stack.keys.getString(nextCrumb);
-            SceneView scene = stack.scenes.get(key);
+            final SceneView scene = stack.scenes.get(key);
             int popEnter = getAnimationResourceId(activity, scene.enterAnim, android.R.attr.activityCloseEnterAnimation);
             int popExit = getAnimationResourceId(activity, scene.exitAnim, android.R.attr.activityCloseExitAnimation);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -70,7 +70,22 @@ class FragmentNavigator extends SceneNavigator {
             fragmentTransaction.add(stack.getChildAt(0).getId(), fragment, key);
             fragmentTransaction.addToBackStack(String.valueOf(nextCrumb));
             fragmentTransaction.commit();
-            scene.appeared();
+            if (i == crumb - currentCrumb - 1 && oldCrumb != -1) {
+                Animation animation = AnimationUtils.loadAnimation(activity, enter);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scene.appeared();
+                    }
+                }, animation.getDuration());
+            } else {
+                scene.appeared();
+            }
+        }
+        for (int i = 0; i <= currentCrumb; i++) {
+            String key = stack.keys.getString(i);
+            final SceneView scene = stack.scenes.get(key);
+            scene.disappeared();
         }
     }
 
