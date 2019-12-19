@@ -21,7 +21,7 @@ export interface NavigationStackProps {
     /**
      * A Scene's to and from crumb trail style
      */
-    crumbStyle?: (from: boolean, state: State, data: any, nextState?: State, nextData?: any) => string;
+    crumbStyle?: (from: boolean, state: State, data: any, crumbs: any, nextState?: State, nextData?: any) => string;
     /**
      * A Scene's to and from unmount style
      */
