@@ -28,6 +28,8 @@
     [super willMoveToSuperview:newSuperview];
     if (!newSuperview) {
         [self.reactViewController.navigationController setNavigationBarHidden:false];
+    } else {
+        [newSuperview.reactViewController.navigationController setNavigationBarHidden:self.hidden];
     }
 }
 
