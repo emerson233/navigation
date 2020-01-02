@@ -5,7 +5,6 @@ import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 
 import java.util.HashSet;
@@ -30,9 +29,6 @@ public class SceneFragment extends Fragment implements SharedElementContainer {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getActivity() != null && getActivity().getWindow() != null) {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        }
         if (sharedElementNames != null )
             scene.transitioner = new SharedElementTransitioner(this, sharedElementNames);
         if (scene.transitioner != null)
