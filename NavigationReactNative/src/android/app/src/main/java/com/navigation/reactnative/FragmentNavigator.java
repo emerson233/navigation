@@ -30,10 +30,15 @@ class FragmentNavigator extends SceneNavigator {
             prevFragment.getScene().transitioner = new SharedElementTransitioner(prevFragment, getSharedElementSet(stack.oldSharedElementNames));
         for (int i = currentCrumb; i > crumb + 1; i--) {
             SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
+            if (currentFragment == null) {
+                continue;
+            }
             currentFragment.animationDisabled = true; // disable all intermediate animations
         }
-        prevFragment.getScene().appeared();
         fragmentManager.popBackStack(String.valueOf(crumb), 0);
+        if (prevFragment != null && prevFragment.getScene() != null) {
+            prevFragment.getScene().appeared();
+        }
     }
 
     @Override
