@@ -74,7 +74,7 @@ class FragmentNavigator extends SceneNavigator {
             SceneFragment fragment = new SceneFragment(scene, getSharedElementSet(stack.sharedElementNames));
             fragmentTransaction.add(stack.getChildAt(0).getId(), fragment, key);
             fragmentTransaction.addToBackStack(String.valueOf(nextCrumb));
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
             if (i == crumb - currentCrumb - 1 && oldCrumb != -1 && enter != 0) {
                 Animation animation = AnimationUtils.loadAnimation(activity, enter);
                 new Handler().postDelayed(new Runnable() {
