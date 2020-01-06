@@ -38,7 +38,6 @@ class TabBar extends React.Component<any, any> {
                         if (this.state.selectedTab !== nativeEvent.tab)
                             this.setState({selectedTab: nativeEvent.tab})
                     }}
-                    selectedTab={this.state.selectedTab}
                     barTintColor={barTintColor}
                     selectedTintColor={selectedTintColor}
                     unselectedTintColor={unselectedTintColor}
