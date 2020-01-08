@@ -179,7 +179,8 @@ public class NavigationBarView extends AppBarLayout {
     private static final String PROP_ACTION_ENABLED = "enabled";
 
     void setMenuItems(@Nullable ReadableArray menuItems) {
-        toolbar.getMenu().clear();
+        Menu menu = toolbar.getMenu();
+        menu.clear();
         actionsHolder.clear();
         if (menuItems != null) {
             for (int i = 0; i < menuItems.size(); i++) {
@@ -191,7 +192,7 @@ public class NavigationBarView extends AppBarLayout {
                         ? menuItemProps.getString(PROP_ACTION_TITLE)
                         : "";
                 ReadableMap iconSource = menuItemProps.getMap(PROP_ACTION_ICON);
-                MenuItem menuItem = toolbar.getMenu().add(Menu.NONE, Menu.NONE, i, title);
+                MenuItem menuItem = menu.add(Menu.NONE, Menu.NONE, i, title);
                 if (menuItemProps.hasKey(PROP_ACTION_ENABLED)) {
                     menuItem.setEnabled(menuItemProps.getBoolean(PROP_ACTION_ENABLED));
                 }
@@ -204,6 +205,7 @@ public class NavigationBarView extends AppBarLayout {
                 menuItem.setShowAsAction(showAsAction);
             }
         }
+        requestLayout();
     }
 
     private void setMenuItemIcon(final MenuItem item, ReadableMap iconSource) {
