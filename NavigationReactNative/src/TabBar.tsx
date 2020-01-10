@@ -6,16 +6,9 @@ class TabBar extends React.Component<any, any> {
     constructor(props) {
         super(props);
         this.state = {selectedTab: 0};
-        this.handleBack = this.handleBack.bind(this);
     }
     static defaultProps = {
         bottomTabs: false,
-    }
-    handleBack() {
-        var {selectedTab} = this.state;
-        if (selectedTab)
-            this.setState({selectedTab: 0});
-        return !!selectedTab;
     }
     render() {
         var {children, barTintColor, selectedTintColor, unselectedTintColor, bottomTabs} = this.props;
@@ -42,7 +35,6 @@ class TabBar extends React.Component<any, any> {
                     selectedTintColor={selectedTintColor}
                     unselectedTintColor={unselectedTintColor}
                     style={styles.tabBar}>
-                        <BackButton onPress={this.handleBack} />
                         {tabBarItems
                             .filter(child => !!child)
                             .map((child: any, index) => {
