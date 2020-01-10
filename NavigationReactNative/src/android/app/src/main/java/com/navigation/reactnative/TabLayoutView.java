@@ -63,6 +63,7 @@ public class TabLayoutView extends TabLayout {
         if (getTabTextColors() != null)
             selectedTintColor = unselectedTintColor = defaultTextColor = getTabTextColors().getDefaultColor();
         setSelectedTabIndicatorColor(defaultTextColor);
+        setSelectedTabIndicator(null);
         iconResolver = new IconResolver(context);
 
         addOnTabSelectedListener(new BaseOnTabSelectedListener() {
