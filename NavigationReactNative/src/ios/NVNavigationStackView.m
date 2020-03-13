@@ -7,11 +7,37 @@
 #import <React/RCTUIManager.h>
 #import <React/UIView+React.h>
 
+@interface InteractivePopGestureDelegate : NSObject <UIGestureRecognizerDelegate>
+
+@property (nonatomic, weak) UINavigationController *navigationController;
+@property (nonatomic, weak) id<UIGestureRecognizerDelegate> originalDelegate;
+
+@end
+
+@implementation InteractivePopGestureDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+  if (self.navigationController.viewControllers.count < 2) {
+    return NO;
+  } else if (self.navigationController.navigationBarHidden) {
+    return YES;
+  } else if (self.navigationController.viewControllers.count > 0 && self.navigationController.viewControllers.lastObject.navigationItem.leftBarButtonItems.count > 0) {
+    return YES;
+  } else if (!self.navigationController.navigationBarHidden && self.originalDelegate == nil) {
+    return YES;
+  } else {
+    return [self.originalDelegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];
+  }
+}
+
+@end
+
 @implementation NVNavigationStackView
 {
     __weak RCTBridge *_bridge;
     NSMutableDictionary *_scenes;
     NSInteger _nativeEventCount;
+    InteractivePopGestureDelegate *interactivePopGestureDelegate;
 }
 
 - (id)initWithBridge:(RCTBridge *)bridge
@@ -21,6 +47,10 @@
         _navigationController = [[UINavigationController alloc] init];
         [self addSubview:_navigationController.view];
         _navigationController.delegate = self;
+        interactivePopGestureDelegate = [InteractivePopGestureDelegate new];
+        interactivePopGestureDelegate.navigationController = _navigationController;
+        interactivePopGestureDelegate.originalDelegate = _navigationController.interactivePopGestureRecognizer.delegate;
+        _navigationController.interactivePopGestureRecognizer.delegate = interactivePopGestureDelegate;
         _scenes = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -66,9 +96,6 @@
                 [weakSelf notifyForBoundsChange:sceneController];
             };
             controller.navigationItem.title = scene.title;
-            if (nextCrumb > 0) {
-                controller.hidesBottomBarWhenPushed = true;
-            }
             [controllers addObject:controller];
         }
         
