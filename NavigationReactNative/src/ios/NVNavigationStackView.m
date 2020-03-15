@@ -96,6 +96,9 @@
                 [weakSelf notifyForBoundsChange:sceneController];
             };
             controller.navigationItem.title = scene.title;
+            if (nextCrumb > 0) {
+                controller.hidesBottomBarWhenPushed = true;
+            }
             [controllers addObject:controller];
         }
         
