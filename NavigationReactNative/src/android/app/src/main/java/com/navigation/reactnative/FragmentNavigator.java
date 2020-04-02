@@ -24,10 +24,13 @@ class FragmentNavigator extends SceneNavigator {
     void navigateBack(int currentCrumb, int crumb, Activity activity, NavigationStackView stack) {
         final FragmentManager fragmentManager = getFragmentManager(stack, activity);
         SceneFragment fragment = (SceneFragment) fragmentManager.findFragmentByTag(oldKey);
-        Pair[] sharedElements = getOldSharedElements(currentCrumb, crumb, fragment, stack);
         SceneFragment prevFragment = (SceneFragment) fragmentManager.findFragmentByTag(stack.keys.getString(crumb));
-        if (sharedElements != null && prevFragment != null && prevFragment.getScene() != null)
-            prevFragment.getScene().transitioner = new SharedElementTransitioner(prevFragment, getSharedElementSet(stack.oldSharedElementNames));
+        if (fragment != null) {
+            Pair[] sharedElements = getOldSharedElements(currentCrumb, crumb, fragment, stack);
+            if (sharedElements != null && prevFragment != null && prevFragment.getScene() != null)
+                prevFragment.getScene().transitioner = new SharedElementTransitioner(prevFragment, getSharedElementSet(stack.oldSharedElementNames));
+        }
+
         for (int i = currentCrumb; i > crumb + 1; i--) {
             SceneFragment currentFragment = (SceneFragment) fragmentManager.findFragmentByTag(String.valueOf(i));
             if (currentFragment == null) {
@@ -52,6 +55,9 @@ class FragmentNavigator extends SceneNavigator {
             int nextCrumb = currentCrumb + i + 1;
             String key = stack.keys.getString(nextCrumb);
             final SceneView scene = stack.scenes.get(key);
+            if (scene == null) {
+                continue;
+            }
             int popEnter = getAnimationResourceId(activity, scene.enterAnim, android.R.attr.activityCloseEnterAnimation);
             int popExit = getAnimationResourceId(activity, scene.exitAnim, android.R.attr.activityCloseExitAnimation);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -89,8 +95,10 @@ class FragmentNavigator extends SceneNavigator {
         }
         for (int i = 0; i <= currentCrumb; i++) {
             String key = stack.keys.getString(i);
-            final SceneView scene = stack.scenes.get(key);
-            scene.disappeared();
+            SceneView scene = stack.scenes.get(key);
+            if (scene != null) {
+                scene.disappeared();
+            }
         }
     }
 
@@ -100,6 +108,9 @@ class FragmentNavigator extends SceneNavigator {
         int exit = getAnimationResourceId(activity, stack.exitAnim, android.R.attr.activityOpenExitAnimation);
         String key = stack.keys.getString(crumb);
         SceneView scene = stack.scenes.get(key);
+        if (scene == null) {
+            return;
+        }
         int popEnter = getAnimationResourceId(activity, scene.enterAnim, android.R.attr.activityCloseEnterAnimation);
         int popExit = getAnimationResourceId(activity, scene.exitAnim, android.R.attr.activityCloseExitAnimation);
         FragmentManager fragmentManager = getFragmentManager(stack, activity);
