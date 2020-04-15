@@ -17,20 +17,20 @@ import androidx.fragment.app.Fragment;
 public class SceneFragment extends Fragment implements SharedElementContainer {
     public boolean animationDisabled;
     private SceneView scene;
-    private HashSet<String> sharedElementNames;
 
     SceneFragment(SceneView scene, HashSet<String> sharedElements) {
         super();
         this.scene = scene;
         scene.fragment = this;
-        sharedElementNames = sharedElements;
+        if (sharedElements != null )
+            scene.transitioner = new SharedElementTransitioner(this, sharedElements);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (sharedElementNames != null )
-            scene.transitioner = new SharedElementTransitioner(this, sharedElementNames);
+        if (scene.getParent() != null)
+            ((ViewGroup) scene.getParent()).endViewTransition(scene);
         if (scene.transitioner != null)
             postponeEnterTransition();
         return scene;
