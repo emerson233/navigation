@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View, Text, TouchableHighlight } from 'react-native';
+import { View, Text, ScrollView, TouchableHighlight } from 'react-native';
 import { StateNavigator } from 'navigation';
 import { NavigationContext, NavigationHandler } from 'navigation-react';
-import { NavigationStack, NavigationBar, RightBar, BarButton, SearchBarIOS, SharedElementAndroid, TabBar, TabBarItem } from 'navigation-react-native';
+import { NavigationStack, NavigationBar, CoordinatorLayout, RightBar, BarButton, SearchBar, SharedElement, TabBar, TabBarItem } from 'navigation-react-native';
 
 const stateNavigator: StateNavigator = new StateNavigator([
     { key: 'people' },
@@ -12,22 +12,19 @@ const stateNavigator: StateNavigator = new StateNavigator([
 var List = ({people, children}: any) => (
     <NavigationContext.Consumer>
         {({stateNavigator}) => (
-            <>
-                <NavigationBar title="People" />
-                <View>
-                    {people.map(name => (
-                        <TouchableHighlight
-                            onPress={() => {
-                                stateNavigator.navigate('person', {name});
-                        }}>
-                            <SharedElementAndroid name={name}>
-                                <Text>{name}</Text>
-                            </SharedElementAndroid>
-                        </TouchableHighlight>
-                    ))}
-                    {children}
-                </View>
-            </>
+            <ScrollView>
+                {people.map(name => (
+                    <TouchableHighlight
+                        onPress={() => {
+                            stateNavigator.navigate('person', {name});
+                    }}>
+                        <SharedElement name={name}>
+                            <Text>{name}</Text>
+                        </SharedElement>
+                    </TouchableHighlight>
+                ))}
+                {children}
+            </ScrollView>
         )}
     </NavigationContext.Consumer>
 );
@@ -44,18 +41,21 @@ class People extends React.Component<any, any> {
             person.indexOf(text.toLowerCase()) !== -1
         ));
         return (
-            <>
-                <NavigationBar largeTitle={true} title="Person">
-                    <SearchBarIOS
+            <CoordinatorLayout>
+                <NavigationBar largeTitle={true} title="People">
+                    <SearchBar
                         text={text}
                         autoCapitalize="none"
                         obscureBackground={false}
                         onChangeText={text => this.setState({text})}>
                         <List people={matchedPeople} />
-                    </SearchBarIOS>
+                    </SearchBar>
+                    <RightBar>
+                        <BarButton title="Search" search={true} />
+                    </RightBar>
                 </NavigationBar>
                 <List people={people} />
-            </>
+            </CoordinatorLayout>
         );
     }    
 }
@@ -72,9 +72,9 @@ var Person = ({ name }) => (
                     </RightBar>
                 </NavigationBar>
                 <View>
-                    <SharedElementAndroid name={name} transition="bounce">
+                    <SharedElement name={name} transition="bounce">
                         <Text>{name}</Text>
-                    </SharedElementAndroid>
+                    </SharedElement>
                 </View>
             </>
         )}

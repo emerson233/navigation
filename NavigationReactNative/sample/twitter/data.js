@@ -4,27 +4,30 @@ const accounts = {
     username: '@iam_preethi',
     logo: require('./iam_preethi.jpeg'),
     bio: 'Software Engineer @coinbase. Previously @a16z & @GoldmanSachs. Besides doing nerdy things, I love running & reading. I believe in the magic of thinking big :)',
+    colors: ['#3b00d9', '#009df7'],
     following: 763,
     followers: 6722,
-    tweets: [1, 2, 5, 3, 4]
+    tweets: [1, 2, 5, 3, 4, 10]
   },
   2: {
     name: 'Sebastian Markbåge',
     username: '@sebmarkbage',
     logo: require('./sebmarkbage.jpg'),
     bio: 'React JS · TC39 · The Facebook · Tweets are personal',
+    colors: ['#008d4a', '#006c37'],
     following: 354,
     followers: 14319,
-    tweets: [5, 6, 9, 7, 8]
+    tweets: [5, 6, 9, 7, 8, 2]
   },
   3: {
     name: 'Dan Abramov',
     username: '@dan_abramov',
     logo: require('./dan_abramov.jpeg'),
     bio: 'Co-authored Redux, Create React App, React Hot Loader, React DnD. Helping improve @reactjs. Personal opinions. #juniordevforlife',
+    colors: ['#9e6144', '#ff80a4'],
     following: 1576,
     followers: 52822,
-    tweets: [9, 10, 1, 11, 12]
+    tweets: [9, 10, 1, 11, 12, 6]
   }
 };
 
@@ -137,13 +140,20 @@ const fetchTweet = id => ({
 });
 
 const getHome = () => {
-  const homeTweets = [1, 5, 9, 2, 6, 10];
+  const homeTweets = [1, 5, 9, 2, 6, 10, 3, 7, 11];
   return homeTweets.map(id => fetchTweet(id));
 };
 
-const getFollows = () => {
-  const notifications = [1, 2, 3];
-  return notifications.map(id => ({...accounts[id], id}));
+const getNotifications = () => {
+  return [
+    {follow: true, account: {...accounts[2], id: 2}},
+    {mention: true, ...fetchTweet(1)},
+    {follow: true, account: {...accounts[3], id: 3}},
+    {mention: true, ...fetchTweet(5)},
+    {follow: true, account: {...accounts[1], id: 1}},
+    {mention: true, ...fetchTweet(9)},
+    {mention: true, ...fetchTweet(6)},
+  ];
 };
 
 const getTweet = id => {
@@ -158,4 +168,4 @@ const getTimeline = id => {
   return timeline;
 };
 
-export {getHome, getFollows, getTweet, getTimeline};
+export {getHome, getNotifications, getTweet, getTimeline};
