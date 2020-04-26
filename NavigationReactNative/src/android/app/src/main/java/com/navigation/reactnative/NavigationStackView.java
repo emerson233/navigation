@@ -51,7 +51,7 @@ public class NavigationStackView extends ViewGroup {
             currentActivity.finishAffinity();
             return;
         }
-        if (scenes.size() == 0)
+        if (scenes.size() == 0 || !navigator.canNavigate(currentActivity, this))
             return;
         int crumb = keys.size() - 1;
         int currentCrumb = navigator.oldCrumb;
