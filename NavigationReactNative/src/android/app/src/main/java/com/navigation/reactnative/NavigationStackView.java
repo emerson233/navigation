@@ -51,7 +51,7 @@ public class NavigationStackView extends ViewGroup {
             currentActivity.finishAffinity();
             return;
         }
-        if (scenes.size() == 0 || !navigator.canNavigate(currentActivity, this))
+        if (scenes.size() == 0 || !navigator.canNavigate(currentActivity, this) || getParent() == null)
             return;
         int crumb = keys.size() - 1;
         int currentCrumb = navigator.oldCrumb;
@@ -84,6 +84,11 @@ public class NavigationStackView extends ViewGroup {
                 fragmentTransation.remove(fragment);
             }
             fragmentTransation.commitAllowingStateLoss();
+            try {
+                 if (!fragmentManager.isDestroyed())
+                     fragmentManager.executePendingTransactions();
+             } catch (IllegalArgumentException ignored) {
+             }
         }
     }
 
