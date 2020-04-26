@@ -12,3 +12,5 @@ node_modules
 android.iml
 app.iml
 local.properties
+NavigationReactNative/src/android/app/build
+NavigationReactNative/src/android/build

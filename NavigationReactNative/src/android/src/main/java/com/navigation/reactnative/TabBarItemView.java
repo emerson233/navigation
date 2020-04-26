@@ -15,6 +15,9 @@ public class TabBarItemView extends ViewGroup implements NavigationBoundary {
     Fragment fragment;
     protected int index;
     protected String title;
+    protected @Nullable ReadableMap imageResource;
+    protected Integer badgeColor;
+    protected String badge;
     private Drawable icon;
     private TabView tabView;
     private IconResolver.IconResolverListener tabIconResolverListener;
@@ -38,11 +41,14 @@ public class TabBarItemView extends ViewGroup implements NavigationBoundary {
     }
 
     void setIconSource(@Nullable ReadableMap source) {
+        imageResource = source;
         IconResolver.setIconSource(source, tabIconResolverListener, getContext());
     }
 
     void setTabView(TabView tabView) {
         this.tabView = tabView;
+        if (icon != null)
+            tabView.setIcon(index, icon);
     }
 
     protected void pressed() {

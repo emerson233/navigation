@@ -46,7 +46,7 @@ public class TabLayoutView extends TabLayout implements TabView {
         }
 
         @Override
-        protected void setDrawable(Drawable d) {
+        public void setDrawable(Drawable d) {
             iconView.setImageDrawable(d);
             post(measureAndLayout);
             requestLayout();

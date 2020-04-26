@@ -56,7 +56,7 @@ public class TabBarView extends ViewPager {
         return null;
     }
 
-    private TabView getTabView() {
+    TabView getTabView() {
         ViewGroup parent = (ViewGroup) getParent();
         if (parent instanceof CoordinatorLayout) {
             parent = (ViewGroup) parent.getChildAt(0);
@@ -138,8 +138,8 @@ public class TabBarView extends ViewPager {
         return false;
     }
 
-    private class Adapter extends FragmentPagerAdapter {
-        private List<TabFragment> tabFragments = new ArrayList<>();
+    class Adapter extends FragmentPagerAdapter {
+        List<TabFragment> tabFragments = new ArrayList<>();
         FragmentManager fragmentManager;
 
         Adapter(FragmentManager fragmentManager) {

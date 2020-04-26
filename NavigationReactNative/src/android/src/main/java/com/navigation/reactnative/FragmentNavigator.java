@@ -32,7 +32,6 @@ class FragmentNavigator extends SceneNavigator {
         Pair[] sharedElements = fragment != null ? getOldSharedElements(currentCrumb, crumb, fragment, stack) : null;
         SceneFragment prevFragment = (SceneFragment) fragmentManager.findFragmentByTag(stack.keys.getString(crumb));
         if (fragment != null) {
-            Pair[] sharedElements = getOldSharedElements(currentCrumb, crumb, fragment, stack);
             if (sharedElements != null && prevFragment != null && prevFragment.getScene() != null)
                 prevFragment.getScene().transitioner = new SharedElementTransitioner(prevFragment, getSharedElementSet(stack.oldSharedElementNames));
         }

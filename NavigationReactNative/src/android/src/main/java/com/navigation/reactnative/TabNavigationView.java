@@ -35,7 +35,6 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
         TabBarView tabBar = getTabBar();
         if (bottomTabs && tabBar != null) {
             setupWithViewPager(tabBar);
-            tabBar.populateTabs();
         }
     }
 
