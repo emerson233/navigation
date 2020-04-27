@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class TabBarView extends ViewPager {
-    private List<TabBarItemView> tabs = new ArrayList<>();
     boolean swipeable = true;
 
     public TabBarView(Context context) {
@@ -61,6 +60,15 @@ public class TabBarView extends ViewPager {
             View child = ((ViewGroup) getParent()).getChildAt(i);
             if (child instanceof TabLayoutView)
                 return (TabLayoutView) child;
+        }
+        return null;
+    }
+
+    TabNavigationView getTabNavigation() {
+        for (int i = 0; getParent() != null && i < ((ViewGroup) getParent()).getChildCount(); i++) {
+            View child = ((ViewGroup) getParent()).getChildAt(i);
+            if (child instanceof TabNavigationView)
+                return (TabNavigationView) child;
         }
         return null;
     }
