@@ -8,16 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -26,6 +16,15 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class TabBarView extends ViewPager {
     private List<TabBarItemView> tabs = new ArrayList<>();
@@ -45,6 +44,16 @@ public class TabBarView extends ViewPager {
         post(measureAndLayout);
         if (getTabView() != null)
             getTabView().setupWithViewPager(this);
+        populateTabs();
+    }
+
+    void populateTabs() {
+        TabView tabView = getTabView();
+        if (tabView != null && getAdapter() != null) {
+            for(int i = 0; i < tabView.getTabCount(); i++) {
+                getAdapter().tabFragments.get(i).tabBarItem.setTabView(tabView);
+            }
+        }
     }
 
     TabLayoutView getTabLayout() {

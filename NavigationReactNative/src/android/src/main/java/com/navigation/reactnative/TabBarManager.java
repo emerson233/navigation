@@ -82,6 +82,8 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
         super.onAfterUpdateTransaction(view);
         if (view.getTabLayout() != null) {
             view.getTabLayout().populateTabIcons();
+        } else {
+            view.populateTabs();
         }
     }
 }

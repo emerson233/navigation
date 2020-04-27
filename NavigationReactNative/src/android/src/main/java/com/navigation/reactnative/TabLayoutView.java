@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.database.DataSetObserver;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +17,12 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.drawee.view.MultiDraweeHolder;
 import com.facebook.react.bridge.ReadableMap;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.ImageViewCompat;
 import androidx.viewpager.widget.ViewPager;
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.tabs.TabLayout;
 
 public class TabLayoutView extends TabLayout implements TabView {
     boolean bottomTabs;

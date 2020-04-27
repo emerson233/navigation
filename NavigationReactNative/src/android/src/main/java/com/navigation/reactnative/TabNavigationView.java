@@ -2,7 +2,10 @@ package com.navigation.reactnative;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,10 +13,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 public class TabNavigationView extends BottomNavigationView implements TabView {
     boolean bottomTabs;
@@ -25,6 +33,8 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
 
     public TabNavigationView(Context context) {
         super(context);
+        //set to show all the TabTarItem label
+        setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
         TabLayoutView tabLayout = new TabLayoutView(context);
         selectedTintColor = unselectedTintColor = defaultTextColor = tabLayout.defaultTextColor;
     }
@@ -35,6 +45,9 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
         TabBarView tabBar = getTabBar();
         if (bottomTabs && tabBar != null) {
             setupWithViewPager(tabBar);
+            //show unread RedDot view
+            initRedDotView();
+            tabBar.populateTabs();
         }
     }
 
@@ -97,6 +110,45 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
         }
         requestLayout();
         post(measureAndLayout);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void initRedDotView() {
+        BottomNavigationMenuView menuView = null;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof BottomNavigationMenuView) {
+                menuView = (BottomNavigationMenuView) child;
+                break;
+            }
+        }
+        TabBarView tabBar = getTabBar();
+        if (menuView != null && tabBar != null && tabBar.getAdapter() != null) {
+            int dp8 = getResources().getDimensionPixelSize(R.dimen.space_8);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView.LayoutParams params = new BottomNavigationItemView.LayoutParams(dp8, dp8);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                params.leftMargin = dp8 * 2;
+                params.topMargin = dp8 / 2;
+                BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
+                DotView dotView = new DotView(this.getContext());
+                dotView.setBackgroundColor(Color.RED);
+                TabBarItemView tabBarItemView = tabBar.getAdapter().tabFragments.get(i).tabBarItem;
+                if (tabBarItemView.badgeColor != null) {
+                    Drawable wrappedDrawable = DrawableCompat.wrap(dotView.getBackground());
+                    DrawableCompat.setTint(wrappedDrawable, tabBarItemView.badgeColor);
+                    dotView.setBackground(wrappedDrawable);
+                } else {
+                    dotView.setBackgroundResource(R.drawable.badge_dot);
+                }
+                if ("BADGE_DOT".equals(tabBarItemView.badge)) {
+                    dotView.setVisibility(View.VISIBLE);
+                } else {
+                    dotView.setVisibility(View.GONE);
+                }
+                itemView.addView(dotView, params);
+            }
+        }
     }
 
     @Override
