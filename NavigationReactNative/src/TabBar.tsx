@@ -40,6 +40,7 @@ class TabBar extends React.Component<any, any> {
                 {!bottomTabs && tabLayout}
                 {!!tabBarItems.length && <TabBar
                     tabCount={tabBarItems.length}
+                    badges={tabBarItems.map(({props: {badge}}: any) => badge)}
                     onTabSelected={({nativeEvent}) => {
                         if (this.state.selectedTab !== nativeEvent.tab)
                             this.setState({selectedTab: nativeEvent.tab})
