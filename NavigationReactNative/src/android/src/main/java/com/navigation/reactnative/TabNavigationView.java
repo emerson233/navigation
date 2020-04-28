@@ -113,7 +113,7 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void initRedDotView() {
+    void initRedDotView() {
         BottomNavigationMenuView menuView = null;
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
