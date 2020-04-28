@@ -39,6 +39,7 @@ public class ToolbarView extends Toolbar {
 
     public ToolbarView(Context context) {
         super(context);
+        setContentInsetsRelative(0, 0);
         setLayoutParams(new AppBarLayout.LayoutParams(AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.MATCH_PARENT));
         defaultTitleTextColor = getDefaultTitleTextColor();
         defaultOverflowIcon = getOverflowIcon();
