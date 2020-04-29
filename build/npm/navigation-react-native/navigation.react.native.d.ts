@@ -178,6 +178,7 @@ export interface BarButtonProps {
      * Indicates whether this item opens the search bar
      */
     search?: boolean;
+    accessibilityLabel?: string
 }
 
 /**

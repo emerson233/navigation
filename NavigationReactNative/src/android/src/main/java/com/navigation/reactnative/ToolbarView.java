@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -30,6 +31,7 @@ public class ToolbarView extends Toolbar {
     private static final String PROP_ACTION_TITLE = "title";
     private static final String PROP_ACTION_TINTCOLOR = "tintColor";
     private static final String PROP_ACTION_ENABLED = "enabled";
+    private static final String PROP_CONTENT_DESCRIPTION = "accessibilityLabel";
     private static final String PROP_ACTION_SEARCH = "search";
     int defaultTitleTextColor;
     Drawable defaultOverflowIcon;
@@ -149,6 +151,9 @@ public class ToolbarView extends Toolbar {
             MenuItem menuItem = getMenu().add(Menu.NONE, Menu.NONE, i, title);
             if (menuItemProps.hasKey(PROP_ACTION_ENABLED)) {
                 menuItem.setEnabled(menuItemProps.getBoolean(PROP_ACTION_ENABLED));
+            }
+            if (menuItemProps.hasKey(PROP_CONTENT_DESCRIPTION)) {
+                MenuItemCompat.setContentDescription(menuItem, menuItemProps.getString(PROP_CONTENT_DESCRIPTION));
             }
             if (iconSource != null)
                 setMenuItemIcon(menuItem, iconSource);
