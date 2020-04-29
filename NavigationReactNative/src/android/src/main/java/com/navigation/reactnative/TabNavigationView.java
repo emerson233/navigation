@@ -141,17 +141,24 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
                 } else {
                     dotView.setBackgroundResource(R.drawable.badge_dot);
                 }
+                View view = null;
+                for (int j = 0; j < itemView.getChildCount(); j++) {
+                    View child = itemView.getChildAt(j);
+                    if (child instanceof DotView) {
+                        view = child;
+                    }
+                }
                 if ("BADGE_DOT".equals(tabBarItemView.badge)) {
-                    itemView.addView(dotView, params);
+                    if (view == null) {
+                        itemView.addView(dotView, params);
+                    }
                 } else {
-                    for (int j = 0; j < itemView.getChildCount(); j++) {
-                        View view = itemView.getChildAt(j);
-                        if (view instanceof DotView) {
-                            itemView.removeView(view);
-                        }
+                    if (view != null) {
+                        itemView.removeView(view);
                     }
                 }
             }
+            post(measureAndLayout);
         }
     }
 
