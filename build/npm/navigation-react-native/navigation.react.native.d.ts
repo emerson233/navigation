@@ -167,6 +167,7 @@ export interface BarButtonProps {
     show?: 'ifRoom' | 'never' | 'always';
     tintColor?: string
     enabled?: boolean
+    accessibilityLabel?: string
 }
 
 /**

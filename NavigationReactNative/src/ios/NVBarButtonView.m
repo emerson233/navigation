@@ -60,4 +60,9 @@
     }
 }
 
+- (void)setAccessibilityLabel:(NSString *)accessibilityLabel
+{
+    self.button.accessibilityIdentifier = accessibilityLabel;
+}
+
 @end

@@ -27,6 +27,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 
 public class NavigationBarView extends AppBarLayout {
     class ActionIconControllerListener extends IconResolver.IconControllerListener {
@@ -177,6 +178,7 @@ public class NavigationBarView extends AppBarLayout {
     private static final String PROP_ACTION_TITLE = "title";
     private static final String PROP_ACTION_TINTCOLOR = "tintColor";
     private static final String PROP_ACTION_ENABLED = "enabled";
+    private static final String PROP_CONTENT_DESCRIPTION = "accessibilityLabel";
 
     void setMenuItems(@Nullable ReadableArray menuItems) {
         Menu menu = toolbar.getMenu();
@@ -195,6 +197,9 @@ public class NavigationBarView extends AppBarLayout {
                 MenuItem menuItem = menu.add(Menu.NONE, Menu.NONE, i, title);
                 if (menuItemProps.hasKey(PROP_ACTION_ENABLED)) {
                     menuItem.setEnabled(menuItemProps.getBoolean(PROP_ACTION_ENABLED));
+                }
+                if (menuItemProps.hasKey(PROP_CONTENT_DESCRIPTION)) {
+                    MenuItemCompat.setContentDescription(menuItem, menuItemProps.getString(PROP_CONTENT_DESCRIPTION));
                 }
                 if (iconSource != null) {
                     setMenuItemIcon(menuItem, iconSource);
