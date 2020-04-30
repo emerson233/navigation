@@ -1,22 +1,11 @@
 import React from 'react';
-import {StyleSheet, ScrollView, ToolbarAndroid} from 'react-native';
-import {NavigationBarIOS} from 'navigation-react-native';
+import {Platform} from 'react-native';
+import {NavigationBar, CoordinatorLayout} from 'navigation-react-native';
 import Tweets from './Tweets';
 
 export default ({tweets}) => (
-  <ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.view}>
-    <ToolbarAndroid title="Home" style={styles.toolbar} />
-    <NavigationBarIOS title="Home" />
+  <CoordinatorLayout>
+    <NavigationBar title="Home" barTintColor={Platform.OS === 'android' ? '#fff' : null} />
     <Tweets tweets={tweets} />
-  </ScrollView>
+  </CoordinatorLayout>
 );
-
-const styles = StyleSheet.create({
-  toolbar: {
-    height: Platform.OS === 'android' ? 50 : 0,
-  },
-  view: {
-    paddingLeft: 20,
-    paddingRight: 20,
-  },
-});

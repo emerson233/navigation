@@ -7,4 +7,10 @@ node_modules
 !Navigation*/src/node_modules
 !Navigation*/test/node_modules
 .DS_Store
-
+.idea
+.gradle
+android.iml
+app.iml
+local.properties
+NavigationReactNative/src/android/app/build
+NavigationReactNative/src/android/build

@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
-import { requireNativeComponent, StyleSheet, View } from 'react-native';
+import { requireNativeComponent, Platform, StyleSheet, View } from 'react-native';
 import { StateNavigator, Crumb, State } from 'navigation';
 import { NavigationContext } from 'navigation-react';
 import BackButton from './BackButton';
-import FragmentContainer from './FragmentContainer';
 import PopSync from './PopSync';
 import Scene from './Scene';
+import PrimaryStackContext from './PrimaryStackContext';
 type NavigationStackProps = {stateNavigator: StateNavigator, primary: boolean, fragmentMode: boolean, title: (state: State, data: any) => string, crumbStyle: any, unmountStyle: any, sharedElements: any, renderScene: (state: State, data: any) => ReactNode};
 type NavigationStackState = {stateNavigator: StateNavigator, keys: string[], finish: boolean};
 
@@ -19,7 +19,6 @@ class NavigationStack extends React.Component<NavigationStackProps, NavigationSt
         this.onDidNavigateBack = this.onDidNavigateBack.bind(this);
     }
     static defaultProps = {
-        primary: true,
         fragmentMode: true,
         unmountStyle: () => null,
         crumbStyle: () => null,
@@ -91,28 +90,31 @@ class NavigationStack extends React.Component<NavigationStackProps, NavigationSt
                 {...this.getAnimation()}
                 onDidNavigateBack={this.onDidNavigateBack}>
                 <BackButton onPress={this.handleBack} />
-                <FragmentContainer style={{flex: 1}} />
-                <PopSync<{crumb: number}>
-                    data={crumbs.concat(nextCrumb || []).map((_, crumb) => ({crumb}))}
-                    getKey={({crumb}) => keys[crumb]}>
-                    {(scenes, popNative) => scenes.map(({key, data: {crumb}}) => (
-                        <Scene
-                            key={key}
-                            crumb={crumb}
-                            sceneKey={key}
-                            unmountStyle={unmountStyle}
-                            crumbStyle={crumbStyle}
-                            title={title}
-                            popped={popNative}
-                            renderScene={renderScene} />
-                    ))}
-                </PopSync>
+                {Platform.OS === 'android' && <NVFragmentContainer style={styles.stack} />}
+                <PrimaryStackContext.Provider value={false}>
+                    <PopSync<{crumb: number}>
+                        data={crumbs.concat(nextCrumb || []).map((_, crumb) => ({crumb}))}
+                        getKey={({crumb}) => keys[crumb]}>
+                        {(scenes, popNative) => scenes.map(({key, data: {crumb}}) => (
+                            <Scene
+                                key={key}
+                                crumb={crumb}
+                                sceneKey={key}
+                                unmountStyle={unmountStyle}
+                                crumbStyle={crumbStyle}
+                                title={title}
+                                popped={popNative}
+                                renderScene={renderScene} />
+                        ))}
+                    </PopSync>
+                </PrimaryStackContext.Provider>
             </NVNavigationStack>
         );
     }
 };
 
-var  NVNavigationStack = requireNativeComponent<any>('NVNavigationStack', null);
+var NVFragmentContainer = requireNativeComponent<any>('NVFragmentContainer', null);
+var NVNavigationStack = requireNativeComponent<any>('NVNavigationStack', null);
 
 const styles = StyleSheet.create({
     stack: {
@@ -122,6 +124,10 @@ const styles = StyleSheet.create({
 
 export default props => (
     <NavigationContext.Consumer>
-        {(navigationEvent) => <NavigationStack stateNavigator={navigationEvent.stateNavigator} {...props} />}
+        {({stateNavigator}) => (
+            <PrimaryStackContext.Consumer>
+                {(primary) => <NavigationStack stateNavigator={stateNavigator} {...props} primary={primary} />}
+            </PrimaryStackContext.Consumer>
+        )}
     </NavigationContext.Consumer>
-)
+);

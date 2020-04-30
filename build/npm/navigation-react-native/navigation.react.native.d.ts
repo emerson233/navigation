@@ -1,5 +1,5 @@
 import { Component, Context, ReactNode } from 'react';
-import { BackHandler, ImageRequireSource, ImageURISource, StyleProp, ViewStyle } from 'react-native';
+import { BackHandler, ImageRequireSource, ImageURISource, NativeSyntheticEvent, StyleProp, ViewStyle } from 'react-native';
 import { StateNavigator, State } from 'navigation';
 
 /**
@@ -69,23 +69,30 @@ export interface NavigationBarProps {
      * The color of the title view
      */
     titleColor?: string;
-
+    /**
+     * The title for the back button
+     */
+    backTitle?: string;
     /**
      * The logo
      */
-    logo?: ImageURISource;
+    logo?: ImageRequireSource | ImageURISource;
     /**
      * The menu overflow image
      */
-    overflowImage?: ImageURISource;
+    overflowImage?: ImageRequireSource | ImageURISource;
     /**
      * The navigation button image
      */
-    navigationImage?: ImageURISource;
+    navigationImage?: ImageRequireSource | ImageURISource;
     /**
-     * Handles navigation button click events
+     * Handles navigation button press events
      */
-    onNavigationPress?: () => void
+    onNavigationPress?: () => void;
+    /**
+     * Handles offset change events
+     */
+    onOffsetChanged?: (e: NativeSyntheticEvent<{offset}>) => void;
 }
 
 /**
@@ -149,7 +156,7 @@ export interface BarButtonProps {
     /**
      * The button image
      */
-    image?: ImageURISource;
+    image?: ImageRequireSource | ImageURISource;
     /**
      * The button system item
      */
@@ -158,7 +165,7 @@ export interface BarButtonProps {
         | 'bookmarks' | 'search' | 'refresh' | 'stop' | 'camera'
         | 'trash' | 'play' | 'pause' | 'rewind' | 'fastForward';
     /**
-     * Handles button click events
+     * Handles button press events
      */
     onPress?: () => void;
     /**
@@ -167,6 +174,10 @@ export interface BarButtonProps {
     show?: 'ifRoom' | 'never' | 'always';
     tintColor?: string
     enabled?: boolean
+    /**
+     * Indicates whether this item opens the search bar
+     */
+    search?: boolean;
     accessibilityLabel?: string
 }
 
@@ -178,7 +189,7 @@ export class BarButton extends Component<BarButtonProps> { }
 /**
  * Defines the Search Bar Props contract
  */
-export interface SearchBarIOSProps {
+export interface SearchBarProps {
     /**
      * Indicates whether to to obscure the underlying content
      */
@@ -212,12 +223,37 @@ export interface SearchBarIOSProps {
 /**
  * Renders a serach bar in the UI navigation bar
  */
-export class SearchBarIOS extends Component<SearchBarIOSProps> { }
+export class SearchBarIOS extends Component<SearchBarProps> { }
+
+/**
+ * Renders a serach bar in the UI navigation bar
+ */
+export class SearchBar extends Component<SearchBarProps> { }
+
+/**
+ * Defines the Coordinator Layout Props contract
+ */
+export interface CoordinatorLayoutProps {
+    /**
+     * The distance the scrolled content overlaps the navigation bar
+     */
+    overlap?: number;   
+}
+
+/**
+ * Container that supports collapsing the navigation bar
+ */
+export class CoordinatorLayout extends Component<CoordinatorLayoutProps> {}
+
+/**
+ * Renders collapsing content inside the navigation bar
+ */
+export class CollapsingBar extends Component {}
 
 /**
  * Defines the Shared Element Props contract
  */
-export interface SharedElementAndroidProps {
+export interface SharedElementProps {
     /**
      * The name shared across scenes by the two elements
      */
@@ -235,7 +271,12 @@ export interface SharedElementAndroidProps {
 /**
  * Shares its child UI element between scenes during navigation
  */
-export class SharedElementAndroid extends Component<SharedElementAndroidProps> {}
+export class SharedElementAndroid extends Component<SharedElementProps> {}
+
+/**
+ * Shares its child UI element between scenes during navigation
+ */
+export class SharedElement extends Component<SharedElementProps> {}
 
 /**
  * The context for overriding default hardware back handling
@@ -253,7 +294,7 @@ export interface TabBarItemProps {
     /**
      * The tab badge value
      */
-    badge?: string;
+    badge?: string | number;
     /**
      * The tab badge background color
      */
@@ -269,7 +310,7 @@ export interface TabBarItemProps {
         | 'featured' | 'history' | 'more' | 'most-recent' | 'most-viewed'
         | 'recents' | 'search' | 'top-rated';
     /**
-     * Handles button click events
+     * Handles button press events
      */
     onPress?: () => void;
 }
@@ -305,6 +346,18 @@ export interface TabBarProps {
      * Indicates whether the tabs should be at the bottom
      */
     bottomTabs?: boolean;
+    /**
+     * Indicates whether the tab bar is for top level navigation
+     */
+    primary?: boolean;
+    /**
+     * Indicates whether the tab bar can be scrolled horizontally
+     */
+    scrollable?: boolean;
+    /**
+     * Indicates whether the selected tab can be changed by swiping 
+     */
+    swipeable?: boolean;
 }
 
 /**

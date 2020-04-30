@@ -11,14 +11,14 @@ const colors = [
   'purple', 'fuchsia', 'indigo', 'green', 'navy', 'blue', 'teal', 'black'
 ];
 
-var stateNavigator = new StateNavigator([
+const stateNavigator = new StateNavigator([
   {key: 'grid'},
   {key: 'detail', trackCrumbTrail: true},
 ]);
 
 const { grid, detail } = stateNavigator.states;
 grid.renderScene = () => <Grid colors={colors}/>;
-detail.renderScene = ({color}) => <Detail colors={colors} color={color}/>;
+detail.renderScene = (data) => <Detail colors={colors} {...data}/>;
 
 stateNavigator.navigate('grid');
 
@@ -26,18 +26,28 @@ detail.truncateCrumbTrail = (state, data, crumbs) => (
   crumbs.slice(-1)[0].state === detail ? crumbs.slice(0, -1) : crumbs
 );
 
-var openLink = (url) => {
+const openLink = (url) => {
   if (url) {
     var color = url.split('=')[1];
-    stateNavigator.navigate('detail', {color});
+    var {state, data} = stateNavigator.stateContext;
+    if (state === detail) {
+      const {filter, search} = data;
+      const suffix = search ? '_search' : '';
+      const matched = !filter || color.indexOf(filter.toLowerCase()) !== -1;
+      const name = matched ? color + suffix : null;
+      stateNavigator.navigate('detail', {color, name, filter, search});
+    } else {
+      stateNavigator.navigate('detail', {color, name: color});
+    }
   }
 };
 
 Linking.getInitialURL().then(openLink);
 Linking.addEventListener('url', ({url}) => openLink(url));
 
-export default () => (
+const App = () => (
   <NavigationHandler stateNavigator={stateNavigator}>
-    <NavigationStack sharedElements={(_, {color}) => color && [color]} />
+    <NavigationStack sharedElements={(_, {name}) => name && [name]} />
   </NavigationHandler>
 );
+export default App;
