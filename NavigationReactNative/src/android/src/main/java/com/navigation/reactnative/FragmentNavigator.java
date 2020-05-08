@@ -80,7 +80,13 @@ class FragmentNavigator extends SceneNavigator {
                 }
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             } else {
-                fragmentTransaction.setCustomAnimations(oldCrumb != -1 ? R.anim.push_left_in : 0, exit, popEnter, R.anim.push_right_out);
+                if (stack.enterAnim != null && scene.exitAnim != null) {
+                    // use the anim pass in
+                    fragmentTransaction.setCustomAnimations(oldCrumb != -1 ? enter : 0, exit, popEnter, popExit);
+                } else {
+                    // use the custom stationary anim, not the system default anim, system default anim do not work properly in some huwei devices
+                    fragmentTransaction.setCustomAnimations(oldCrumb != -1 ? R.anim.push_left_in : 0, exit, popEnter, R.anim.push_right_out);
+                }
             }
             SceneFragment fragment = new SceneFragment(scene, getSharedElementSet(stack.sharedElementNames));
             fragmentTransaction.add(stack.getChildAt(0).getId(), fragment, key);
