@@ -52,7 +52,7 @@ class NavigationBar extends React.Component<any, any> {
                                 barTintColor={!collapsingBar ? otherProps.barTintColor : null}
                                 style={{height: 56}}
                                 onActionSelected={({nativeEvent}) => {
-                                    var onPress = menuItems[nativeEvent.position].onPress;
+                                    var onPress = menuItems[nativeEvent.position] ? menuItems[nativeEvent.position].onPress :undefined;
                                     if (onPress)
                                         onPress();
                                 }}>
