@@ -4,13 +4,11 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTBridge.h>
 #import <React/RCTUIManager.h>
-#import <React/RCTTouchHandler.h>
 #import <React/UIView+React.h>
 
 @implementation NVSearchBarView
 {
     __weak RCTBridge *_bridge;
-    RCTTouchHandler *_touchHandler;
     UIView *_reactSubview;
     NSInteger _nativeEventCount;
 }
@@ -23,7 +21,6 @@
         NVSearchResultsController *viewController = [[NVSearchResultsController alloc] init];
         self.searchController = [[UISearchController alloc] initWithSearchResultsController:viewController];
         self.searchController.searchResultsUpdater = self;
-        _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
         __weak typeof(self) weakSelf = self;
         viewController.boundsDidChangeBlock = ^(CGRect newBounds) {
             [weakSelf notifyForBoundsChange:newBounds];
@@ -34,7 +31,9 @@
 
 - (void)setObscureBackground:(BOOL)obscureBackground
 {
-    [self.searchController setObscuresBackgroundDuringPresentation:obscureBackground];
+    if (@available(iOS 9.1, *)) {
+        [self.searchController setObscuresBackgroundDuringPresentation:obscureBackground];
+    }
 }
 
 - (void)setHideNavigationBar:(BOOL)hideNavigationBar
@@ -60,6 +59,13 @@
     }
 }
 
+- (void)setBarTintColor:(UIColor *)barTintColor
+{
+    if (@available(iOS 13.0, *)) {
+        [self.searchController.searchBar.searchTextField setBackgroundColor:barTintColor];
+    }
+}
+
 - (void)didSetProps:(NSArray<NSString *> *)changedProps
 {
     if (@available(iOS 11.0, *)) {
@@ -78,14 +84,12 @@
 {
     [super insertReactSubview:subview atIndex:atIndex];
     self.searchController.searchResultsController.view = subview;
-    [_touchHandler attachToView:subview];
     _reactSubview = subview;
 }
 
 - (void)removeReactSubview:(UIView *)subview
 {
     [super removeReactSubview:subview];
-    [_touchHandler detachFromView:subview];
     _reactSubview = nil;
 }
 

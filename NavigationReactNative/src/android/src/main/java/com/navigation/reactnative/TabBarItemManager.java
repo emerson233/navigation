@@ -1,5 +1,7 @@
 package com.navigation.reactnative;
 
+import android.view.View;
+
 import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.ReadableMap;
@@ -18,11 +20,6 @@ public class TabBarItemManager extends ViewGroupManager<TabBarItemView> {
     @Override
     public String getName() {
         return "NVTabBarItem";
-    }
-
-    @ReactProp(name = "index")
-    public void setIndex(TabBarItemView view, int index) {
-        view.index = index;
     }
 
     @ReactProp(name = "title")
@@ -56,6 +53,16 @@ public class TabBarItemManager extends ViewGroupManager<TabBarItemView> {
         return MapBuilder.<String, Object>builder()
                 .put("onPress", MapBuilder.of("registrationName", "onPress"))
                 .build();
+    }
+
+    @Override
+    public void addView(TabBarItemView parent, View child, int index) {
+        parent.content.add(index, child);
+    }
+
+    @Override
+    public void removeView(TabBarItemView parent, View view) {
+        parent.content.remove(view);
     }
 }
 
