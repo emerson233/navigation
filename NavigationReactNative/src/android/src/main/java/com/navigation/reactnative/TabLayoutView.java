@@ -112,7 +112,7 @@ public class TabLayoutView extends TabLayout implements TabView {
         TabBarView tabBar = getTabBar();
         if (bottomTabs && tabBar != null) {
             setupWithViewPager(tabBar);
-            populateTabIcons();
+//            populateTabIcons();
         }
         tabsHolder.onAttach();
     }
@@ -135,70 +135,70 @@ public class TabLayoutView extends TabLayout implements TabView {
         tabsHolder.onAttach();
     }
 
-    void populateTabIcons() {
-        tabsHolder.clear();
-        TabBarView tabBar = getTabBar();
-        if (tabBar != null && tabBar.getAdapter() != null) {
-            for(int i = 0; i < getTabCount(); i++) {
-                View view;
-                TabLayout.Tab tab = getTabAt(i);
-                if (tab.getCustomView() != null) {
-                    view = tab.getCustomView();
-                } else {
-                    view = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, tab.view, false);
-                    tab.setCustomView(view);
-                }
-                TextView textView = view.findViewById(R.id.text);
-                textView.setText(tab.getText());
-                ImageView iconView = view.findViewById(R.id.icon);
-                View badgeDot = view.findViewById(R.id.badge_dot);
-                int[][] states = new int[][] {
-                        new int[] { android.R.attr.state_selected},
-                        new int[] {-android.R.attr.state_selected}
-                };
-
-                int[] colors = new int[] {
-                        selectedTintColor,
-                        unselectedTintColor
-                };
-                ColorStateList tintColor = new ColorStateList(states, colors);
-                textView.setTextColor(tintColor);
-
-                if (tab.isSelected()) {
-                    iconView.setColorFilter(selectedTintColor, PorterDuff.Mode.SRC_IN);
-                } else {
-                    iconView.setColorFilter(unselectedTintColor, PorterDuff.Mode.SRC_IN);
-                }
-
-                tab.setCustomView(view);
-                TabBarItemView itemView = tabBar.getAdapter().tabFragments.get(i).tabBarItem;
-                itemView.setTabView(tabBar.getTabView());
-                ReadableMap iconSource = itemView.imageResource;
-                if (iconSource != null) {
-                    DraweeHolder<GenericDraweeHierarchy> holder =
-                    DraweeHolder.create(createDraweeHierarchy(), getContext());
-                    TabIconControllerListener controllerListener = new TabIconControllerListener(iconView, holder);
-                    controllerListener.setIconImageInfo(iconResolver.getIconImageInfo(iconSource));
-                    iconResolver.setIconSource(iconSource, controllerListener, holder);
-                    tabsHolder.add(holder);
-                } else {
-                    tab.setIcon(null);
-                }
-                if (itemView.badgeColor != null) {
-                    Drawable wrappedDrawable = DrawableCompat.wrap(badgeDot.getBackground());
-                    DrawableCompat.setTint(wrappedDrawable, itemView.badgeColor);
-                    badgeDot.setBackground(wrappedDrawable);
-                } else {
-                    badgeDot.setBackgroundResource(R.drawable.badge_dot);
-                }
-                if ("BADGE_DOT".equals(itemView.badge)) {
-                    badgeDot.setVisibility(View.VISIBLE);
-                } else {
-                    badgeDot.setVisibility(View.GONE);
-                }
-            }
-        }
-    }
+//    void populateTabIcons() {
+//        tabsHolder.clear();
+//        TabBarView tabBar = getTabBar();
+//        if (tabBar != null && tabBar.getAdapter() != null) {
+//            for(int i = 0; i < getTabCount(); i++) {
+//                View view;
+//                TabLayout.Tab tab = getTabAt(i);
+//                if (tab.getCustomView() != null) {
+//                    view = tab.getCustomView();
+//                } else {
+//                    view = LayoutInflater.from(getContext()).inflate(R.layout.tab_item, tab.view, false);
+//                    tab.setCustomView(view);
+//                }
+//                TextView textView = view.findViewById(R.id.text);
+//                textView.setText(tab.getText());
+//                ImageView iconView = view.findViewById(R.id.icon);
+//                View badgeDot = view.findViewById(R.id.badge_dot);
+//                int[][] states = new int[][] {
+//                        new int[] { android.R.attr.state_selected},
+//                        new int[] {-android.R.attr.state_selected}
+//                };
+//
+//                int[] colors = new int[] {
+//                        selectedTintColor,
+//                        unselectedTintColor
+//                };
+//                ColorStateList tintColor = new ColorStateList(states, colors);
+//                textView.setTextColor(tintColor);
+//
+//                if (tab.isSelected()) {
+//                    iconView.setColorFilter(selectedTintColor, PorterDuff.Mode.SRC_IN);
+//                } else {
+//                    iconView.setColorFilter(unselectedTintColor, PorterDuff.Mode.SRC_IN);
+//                }
+//
+//                tab.setCustomView(view);
+//                TabBarItemView itemView = tabBar.getAdapter().tabFragments.get(i).tabBarItem;
+//                itemView.setTabView(tabBar.getTabView());
+//                ReadableMap iconSource = itemView.imageResource;
+//                if (iconSource != null) {
+//                    DraweeHolder<GenericDraweeHierarchy> holder =
+//                    DraweeHolder.create(createDraweeHierarchy(), getContext());
+//                    TabIconControllerListener controllerListener = new TabIconControllerListener(iconView, holder);
+//                    controllerListener.setIconImageInfo(iconResolver.getIconImageInfo(iconSource));
+//                    iconResolver.setIconSource(iconSource, controllerListener, holder);
+//                    tabsHolder.add(holder);
+//                } else {
+//                    tab.setIcon(null);
+//                }
+//                if (itemView.badgeColor != null) {
+//                    Drawable wrappedDrawable = DrawableCompat.wrap(badgeDot.getBackground());
+//                    DrawableCompat.setTint(wrappedDrawable, itemView.badgeColor);
+//                    badgeDot.setBackground(wrappedDrawable);
+//                } else {
+//                    badgeDot.setBackgroundResource(R.drawable.badge_dot);
+//                }
+//                if ("BADGE_DOT".equals(itemView.badge)) {
+//                    badgeDot.setVisibility(View.VISIBLE);
+//                } else {
+//                    badgeDot.setVisibility(View.GONE);
+//                }
+//            }
+//        }
+//    }
 
     private TabBarView getTabBar() {
         for(int i = 0; getParent() != null && i < ((ViewGroup) getParent()).getChildCount(); i++) {

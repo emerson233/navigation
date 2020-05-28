@@ -171,8 +171,8 @@ public class TabBarView extends ViewPager {
         return false;
     }
 
-    private class Adapter extends PagerAdapter {
-        private List<TabBarItemView> tabs = new ArrayList<>();
+    public class Adapter extends PagerAdapter {
+        public List<TabBarItemView> tabs = new ArrayList<>();
 
         void addTab(TabBarItemView tab, int index) {
             tabs.add(index, tab);

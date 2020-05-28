@@ -2,6 +2,7 @@ package com.navigation.reactnative;
 
 import android.view.View;
 
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.ViewGroupManager;
@@ -83,9 +84,9 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
     @Override
     protected void onAfterUpdateTransaction(@Nonnull TabBarView view) {
         super.onAfterUpdateTransaction(view);
-        if (view.getTabLayout() != null) {
-            view.getTabLayout().populateTabIcons();
-        }
+//        if (view.getTabLayout() != null) {
+//            view.getTabLayout().populateTabIcons();
+//        }
         if (view.getTabNavigation() != null) {
             view.getTabNavigation().initRedDotView();
         }
