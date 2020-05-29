@@ -84,9 +84,6 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
     @Override
     protected void onAfterUpdateTransaction(@Nonnull TabBarView view) {
         super.onAfterUpdateTransaction(view);
-//        if (view.getTabLayout() != null) {
-//            view.getTabLayout().populateTabIcons();
-//        }
         if (view.getTabNavigation() != null) {
             view.getTabNavigation().initRedDotView();
         }

@@ -132,7 +132,6 @@ public class TabNavigationView extends BottomNavigationView implements TabView {
                 BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(i);
                 DotView dotView = new DotView(this.getContext());
                 dotView.setBackgroundColor(Color.RED);
-//                TabBarItemView tabBarItemView = tabBar.getAdapter().tabFragments.get(i).tabBarItem;
                 TabBarItemView tabBarItemView = tabBar.getAdapter().tabs.get(i);
                 if (tabBarItemView.badgeColor != null) {
                     Drawable wrappedDrawable = DrawableCompat.wrap(dotView.getBackground());

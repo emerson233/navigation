@@ -6,12 +6,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
@@ -24,10 +18,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class TabBarView extends ViewPager {
@@ -68,15 +59,6 @@ public class TabBarView extends ViewPager {
                 getAdapter().tabs.get(i).setTabView(tabView, i);
             }
         }
-    }
-
-    TabLayoutView getTabLayout() {
-        for (int i = 0; getParent() != null && i < ((ViewGroup) getParent()).getChildCount(); i++) {
-            View child = ((ViewGroup) getParent()).getChildAt(i);
-            if (child instanceof TabLayoutView)
-                return (TabLayoutView) child;
-        }
-        return null;
     }
 
     TabNavigationView getTabNavigation() {
