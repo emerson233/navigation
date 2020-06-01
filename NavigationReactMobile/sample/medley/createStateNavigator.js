@@ -5,10 +5,10 @@ import Scene from './Scene';
 
 export default () => {
   const states = [
-    {key: 'sceneNorth', route: '', trackCrumbTrail: true},
-    {key: 'sceneEast', trackCrumbTrail: true},
-    {key: 'sceneSouth', trackCrumbTrail: true},
-    {key: 'sceneWest', trackCrumbTrail: true},
+    {key: 'sceneNorth', route: '', trackCrumbTrail: true, title: 'North'},
+    {key: 'sceneEast', trackCrumbTrail: true, title: 'East'},
+    {key: 'sceneSouth', trackCrumbTrail: true, title: 'South'},
+    {key: 'sceneWest', trackCrumbTrail: true, title: 'West'},
   ];
 
   const buildStartUrl = url => {
@@ -16,7 +16,6 @@ export default () => {
     var fluent = stateNavigator.fluent();
     for(var i = 0; i < states.length && states[i].key !== state.key; i++) {
       fluent = fluent.navigate(states[i].key);
-      stateNavigator.historyManager.addHistory(fluent.url, i === 0);
     }
     return fluent.navigate(state.key).url;
   };

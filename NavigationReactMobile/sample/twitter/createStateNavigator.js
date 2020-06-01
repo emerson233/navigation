@@ -11,19 +11,16 @@ export default () => {
   const buildStartUrl = url => {
     const {state, data} = stateNavigator.parseLink(url);
     let fluent = stateNavigator.fluent().navigate('home');
-    stateNavigator.historyManager.addHistory(fluent.url, true);
-    if (state.key === 'photo') {
+    if (state.key === 'photo')
       fluent = fluent.navigate('tweet', {id: data.id});
-      stateNavigator.historyManager.addHistory(fluent.url);
-    }
     return fluent.navigate(state.key, data).url;
   };
 
   const stateNavigator = new StateNavigator([
-    {key: 'home', route: ''},
-    {key: 'tweet', trackCrumbTrail: true},
-    {key: 'timeline', trackCrumbTrail: true},
-    {key: 'photo', trackCrumbTrail: true}
+    {key: 'home', route: '', title: 'Home'},
+    {key: 'tweet', trackCrumbTrail: true, title: 'Tweet'},
+    {key: 'timeline', trackCrumbTrail: true, title: 'Timeline'},
+    {key: 'photo', trackCrumbTrail: true, title: 'Photo'}
   ], new MobileHistoryManager(buildStartUrl));
 
   const {home, tweet, timeline, photo} = stateNavigator.states;

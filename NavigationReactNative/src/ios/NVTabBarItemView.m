@@ -39,6 +39,7 @@
     if (badgeColor && [self.tab.badgeValue isEqualToString:@"●"]) {
         [self.tab setBadgeTextAttributes:@{NSForegroundColorAttributeName: badgeColor} forState:UIControlStateNormal];
     } else {
+    if (@available(iOS 10.0, *)) {
         self.tab.badgeColor = badgeColor;
     }
 }

@@ -83,6 +83,7 @@
     if (crumb < currentCrumb) {
         [_navigationController popToViewController:_navigationController.viewControllers[crumb] animated:true];
     }
+    BOOL animate = ![self.enterAnim isEqualToString:@""];
     if (crumb > currentCrumb) {
         NSMutableArray *controllers = [[NSMutableArray alloc] init];
         for(NSInteger i = 0; i < crumb - currentCrumb; i++) {
@@ -103,10 +104,10 @@
         }
         
         if (crumb - currentCrumb == 1) {
-            [_navigationController pushViewController:controllers[0] animated:true];
+            [_navigationController pushViewController:controllers[0] animated:animate];
         } else {
             NSArray *allControllers = [_navigationController.viewControllers arrayByAddingObjectsFromArray:controllers];
-            [_navigationController setViewControllers:allControllers animated:true];
+            [_navigationController setViewControllers:allControllers animated:animate];
         }
     }
     if (crumb == currentCrumb) {
@@ -116,7 +117,7 @@
         NVSceneController *controller = [[NVSceneController alloc] initWithScene:scene];
         NSMutableArray *controllers = [NSMutableArray arrayWithArray:_navigationController.viewControllers];
         [controllers replaceObjectAtIndex:crumb withObject:controller];
-        [_navigationController setViewControllers:controllers animated:true];
+        [_navigationController setViewControllers:controllers animated:animate];
     }
 }
 

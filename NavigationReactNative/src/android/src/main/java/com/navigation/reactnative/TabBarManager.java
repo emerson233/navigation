@@ -28,13 +28,17 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
 
     @ReactProp(name = "selectedTab")
     public void setSelectedTab(TabBarView view, int selectedTab) {
-        if (view.getCurrentItem() != selectedTab) {
-            view.setCurrentItem(selectedTab, false);
+        int eventLag = view.nativeEventCount - view.mostRecentEventCount;
+        if (eventLag == 0 && view.getCurrentItem() != selectedTab) {
+            view.selectedTab = selectedTab;
+            if (view.getTabsCount() > selectedTab)
+                view.setCurrentItem(selectedTab, false);
         }
-        if (view.getParent() instanceof CoordinatorLayoutView) {
-            CoordinatorLayoutView coordinatorLayoutView = (CoordinatorLayoutView) view.getParent();
-            coordinatorLayoutView.post(coordinatorLayoutView.measureAndLayout);
-        }
+    }
+
+    @ReactProp(name = "mostRecentEventCount")
+    public void setMostRecentEventCount(TabBarView view, int mostRecentEventCount) {
+        view.mostRecentEventCount = mostRecentEventCount;
     }
 
     @ReactProp(name = "tabCount")
@@ -80,9 +84,6 @@ public class TabBarManager extends ViewGroupManager<TabBarView> {
     @Override
     protected void onAfterUpdateTransaction(@Nonnull TabBarView view) {
         super.onAfterUpdateTransaction(view);
-        if (view.getTabLayout() != null) {
-            view.getTabLayout().populateTabIcons();
-        }
         if (view.getTabNavigation() != null) {
             view.getTabNavigation().initRedDotView();
         }
