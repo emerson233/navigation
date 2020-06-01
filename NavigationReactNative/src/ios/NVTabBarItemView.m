@@ -42,6 +42,7 @@
     if (@available(iOS 10.0, *)) {
         self.tab.badgeColor = badgeColor;
     }
+  }
 }
 
 - (void)setImage:(UIImage *)image
