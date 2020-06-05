@@ -30,6 +30,7 @@ public class ToolbarView extends Toolbar {
     private Integer tintColor;
     private ImageButton collapseSearchButton;
     private OnSearchListener onSearchAddedListener;
+    private ReadableArray menuItems;
     private static final String PROP_ACTION_ICON = "image";
     private static final String PROP_ACTION_SHOW = "show";
     private static final String PROP_ACTION_TITLE = "title";
@@ -146,6 +147,7 @@ public class ToolbarView extends Toolbar {
     }
 
     void setMenuItems(@Nullable ReadableArray menuItems) {
+        this.menuItems = menuItems;
         getMenu().clear();
         for (int i = 0; menuItems != null && i < menuItems.size(); i++) {
             ReadableMap menuItemProps = menuItems.getMap(i);
@@ -196,6 +198,14 @@ public class ToolbarView extends Toolbar {
                 for(int j = 0; j < menu.getChildCount(); j++) {
                     if (menu.getChildAt(j) instanceof ActionMenuItemView) {
                         ActionMenuItemView menuItem = (ActionMenuItemView) menu.getChildAt(j);
+                        if (menuItems != null && j < menuItems.size()) {
+                            ReadableMap menuItemProps = menuItems.getMap(j);
+                            if (menuItemProps != null && menuItemProps.hasKey(PROP_ACTION_TINTCOLOR)) {
+                                int color = menuItemProps.getInt(PROP_ACTION_TINTCOLOR);
+                                menuItem.setTextColor(color);
+                                continue;
+                            }
+                        }
                         if (defaultMenuTintColor == null)
                             defaultMenuTintColor = menuItem.getCurrentTextColor();
                         menuItem.setTextColor(tintColor != null ? tintColor : defaultMenuTintColor);

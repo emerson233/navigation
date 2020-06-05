@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { requireNativeComponent, Image, Platform, UIManager, Animated } from 'react-native';
+import { requireNativeComponent, Image, Platform, UIManager, Animated, processColor } from 'react-native';
 import LeftBar from './LeftBar';
 import RightBar from './RightBar';
 import SearchBar from './SearchBar';
@@ -24,6 +24,7 @@ class NavigationBar extends React.Component<any, any> {
                 buttons.concat((React.Children.toArray(props.children))
                     .map(({props}: ReactElement<any>) => ({
                         ...props,
+                        tintColor: Platform.OS === 'android' ? processColor(props.tintColor) : props.tintColor,
                         show: Platform.OS === 'android' ? constants.ShowAsAction[props.show] : undefined,
                         image: Image.resolveAssetSource(props.image),
                     })
