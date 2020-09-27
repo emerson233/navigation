@@ -77,7 +77,6 @@ class TabBar extends React.Component<any, any> {
                     unselectedTintColor={unselectedTintColor}
                     swipeable={!primary}
                     style={styles.tabBar}>
-                        <BackButton onPress={() => this.changeTab(0)} />
                         {tabBarItems
                             .filter(child => !!child)
                             .map((child: any, index) => {
