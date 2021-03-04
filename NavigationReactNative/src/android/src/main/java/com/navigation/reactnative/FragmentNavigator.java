@@ -43,7 +43,8 @@ class FragmentNavigator extends SceneNavigator {
         }
         fragmentManager.popBackStack(String.valueOf(crumb), 0);
         if (prevFragment != null && prevFragment.getScene() != null) {
-            prevFragment.getScene().appeared();
+            prevFragment.getScene().willAppear();
+            prevFragment.getScene().didAppear();
         }
     }
 
@@ -85,15 +86,17 @@ class FragmentNavigator extends SceneNavigator {
             fragmentTransaction.addToBackStack(String.valueOf(nextCrumb));
             fragmentTransaction.commitAllowingStateLoss();
             if (i == crumb - currentCrumb - 1 && oldCrumb != -1 && enter != 0) {
+                scene.willAppear();
                 Animation animation = AnimationUtils.loadAnimation(activity, enter);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scene.appeared();
+                        scene.didAppear();
                     }
                 }, animation.getDuration());
             } else {
-                scene.appeared();
+                scene.willAppear();
+                scene.didAppear();
             }
         }
         for (int i = 0; i <= currentCrumb; i++) {
