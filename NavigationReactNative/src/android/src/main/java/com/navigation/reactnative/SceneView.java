@@ -73,9 +73,13 @@ public class SceneView extends ViewGroup {
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onPopped", null);
     }
 
-    protected void appeared() {
+    protected void willAppear() {
         ReactContext reactContext = (ReactContext) getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onWillAppear", null);
+    }
+
+    protected void didAppear() {
+        ReactContext reactContext = (ReactContext) getContext();
         reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(getId(),"onDidAppear", null);
     }
 
