@@ -139,7 +139,7 @@
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    NSInteger crumb = [navigationController.viewControllers indexOfObject:viewController];
+    NSInteger crumb = [((NVSceneView *) viewController.view).sceneKey intValue];
     if (crumb < [self.reactSubviews count] - 1) {
         _nativeEventCount++;
         self.onDidNavigateBack(@{
@@ -151,9 +151,8 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    NSInteger crumb = [navigationController.viewControllers indexOfObject:viewController];
-    NVSceneView *scene = (NVSceneView *) [_scenes objectForKey:[self.keys objectAtIndex:crumb]];
-    [scene willAppear];
+    NVSceneView *sceneView = ((NVSceneView *) viewController.view);
+    [sceneView willAppear];
 }
 
 @end
