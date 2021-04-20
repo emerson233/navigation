@@ -151,9 +151,8 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
-    NSInteger crumb = [navigationController.viewControllers indexOfObject:viewController];
-    NVSceneView *scene = (NVSceneView *) [_scenes objectForKey:[self.keys objectAtIndex:crumb]];
-    [scene willAppear];
+    NVSceneView *sceneView = ((NVSceneView *) viewController.view);
+    [sceneView willAppear];
 }
 
 @end
