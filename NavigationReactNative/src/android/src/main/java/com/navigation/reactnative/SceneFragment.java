@@ -31,6 +31,8 @@ public class SceneFragment extends Fragment implements SharedElementContainer {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (scene.getParent() != null) {
             ((ViewGroup) scene.getParent()).endViewTransition(scene);
+        }
+        if (scene.getParent() != null) {
             ((ViewGroup) scene.getParent()).removeView(scene);
         }
         if (scene.transitioner != null)
